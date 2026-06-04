@@ -1,32 +1,64 @@
-const likeHeartArray = document.querySelectorAll('.like-icon');
-const likeButtonArray = document.querySelectorAll('.card__like-button');
-const iconButtonArray = document.querySelectorAll('.card__icon-button');
+const popup = document.getElementById("popup-id");
+const openButton = document.querySelector(".button__popup-open");
+const closeButton = document.querySelector(".button__popup-close");
+
+// Открытие попапа
+if (openButton) {
+  openButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    popup.showModal();
+  });
+}
+
+// Закрытие попапа
+if (closeButton) {
+  closeButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    popup.close();
+  });
+}
+
+// Защита от submit
+document.addEventListener("submit", (event) => {
+  event.preventDefault();
+});
+
+const likeHeartArray = document.querySelectorAll(".like-icon");
+const likeButtonArray = document.querySelectorAll(".card__like-button");
+const iconButtonArray = document.querySelectorAll(".card__icon-button");
 
 iconButtonArray.forEach((iconButton, index) => {
-  iconButton.onclick = () =>
+  iconButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     toggleIsLiked(likeHeartArray[index], likeButtonArray[index]);
+  });
 });
 
 likeButtonArray.forEach((button, index) => {
-  button.onclick = () => toggleIsLiked(likeHeartArray[index], button);
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleIsLiked(likeHeartArray[index], button);
+  });
 });
 
 function toggleIsLiked(heart, button) {
-  heart.classList.toggle('is-liked');
+  if (!heart || !button) return;
+  heart.classList.toggle("is-liked");
   setButtonText(heart, button);
 }
 
 function setButtonText(heart, button) {
-  if ([...heart.classList].includes('is-liked')) {
-    setTimeout(
-      () => (button.querySelector('.button__text').textContent = 'Unlike'),
-      500
-    );
-  } else {
-    setTimeout(
-      () => (button.querySelector('.button__text').textContent = 'Like'),
-      500
-    );
-  }
+  const textElement = button.querySelector(".button__text");
+  if (!textElement) return;
+
+  setTimeout(() => {
+    textElement.textContent = heart.classList.contains("is-liked")
+      ? "Unlike"
+      : "Like";
+  }, 500);
 }
 
